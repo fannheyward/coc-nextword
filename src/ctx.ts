@@ -1,5 +1,5 @@
 import { ChildProcess, spawn } from 'child_process';
-import { CompleteResult, Document, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { CompleteResult, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
 import { existsSync } from 'fs';
 import which from 'which';
 
@@ -64,11 +64,11 @@ export class Ctx {
     if (!this.proc) return;
 
     const line = await workspace.nvim.line;
-    // TODO: use whole line as input?
-    // should cleanup the line
-    // const parts = line.split(' ');
-    // const last = parts[parts.length - 2];
-    this.proc.stdin?.write(line + ' \n');
+    const parts = line.split(/[.,?!]/);
+    const last = parts[parts.length - 1];
+    if (!last) return;
+
+    this.proc.stdin?.write(last + ' \n');
 
     return new Promise<CompleteResult>(resolve => {
       const items: VimCompleteItem[] = [];
