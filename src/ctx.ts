@@ -27,9 +27,13 @@ class Config {
 export class Ctx {
   public readonly config: Config;
   private proc: ChildProcess | null = null;
+  private menu: string;
 
   constructor() {
     this.config = new Config();
+
+    const shortcut = workspace.getConfiguration('coc.source.nextword').get('shortcut') as string;
+    this.menu = shortcut ? `[${shortcut}]` : '';
   }
 
   get bin(): string | undefined {
@@ -42,6 +46,8 @@ export class Ctx {
   }
 
   async enabled(): Promise<boolean> {
+    if (!workspace.getConfiguration('coc.source.nextword').get('enable') as boolean) return false;
+
     const doc = await workspace.document;
     if (!doc) return false;
     if (this.config.filetypes.length === 0) return false;
@@ -74,7 +80,7 @@ export class Ctx {
       const items: VimCompleteItem[] = [];
       this.proc?.stdout?.on('data', chunk => {
         for (const word of (chunk.toString() as string).split(' ')) {
-          items.push({ word: word.trimRight() });
+          items.push({ word: word.trimRight(), menu: this.menu });
         }
 
         resolve({ items });

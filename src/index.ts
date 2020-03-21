@@ -23,8 +23,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     sources.createSource({
       name: 'nextword',
-      shortcut: 'NW', // TODO: now shows
-      priority: 1,
       triggerOnly: true,
       triggerPatterns: [/ /], // space only
       doComplete: async () => {

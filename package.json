@@ -49,6 +49,18 @@
       "type": "object",
       "title": "coc-nextword configuration",
       "properties": {
+        "coc.source.nextword.enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "coc.source.nextword.priority": {
+          "type": "integer",
+          "default": 10
+        },
+        "coc.source.nextword.shortcut": {
+          "type": "string",
+          "default": "Next"
+        },
         "nextword.filetypes": {
           "type": "array",
           "default": [
