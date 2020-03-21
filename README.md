@@ -9,6 +9,12 @@
 1. set `$NEXTWORD_DATA_PATH`: `export NEXTWORD_DATA_PATH=/path/to/nextword-data`
 1. `:CocInstall coc-nextword`
 
+## Configurations
+
+- `nextword.filetypes`: Filetypes that enable nextword
+- `nextword.dataPath`: Custom path of nextword dataset
+- `nextword.count`: Max candidates word number
+
 ## License
 
 MIT
