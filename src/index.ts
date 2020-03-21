@@ -1,36 +1,34 @@
-import { commands, CompleteResult, ExtensionContext, listManager, sources, workspace } from 'coc.nvim';
-import DemoList from './lists';
+import { commands, ExtensionContext, sources, workspace } from 'coc.nvim';
+import { Ctx } from './ctx';
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  const ctx = new Ctx();
+  if (!ctx.config.enabled) return;
+
+  if (!ctx.bin) {
+    workspace.showMessage(`nextword is not found, you need to install first: https://github.com/high-moctane/nextword`, 'warning');
+    return;
+  }
+
+  if (!ctx.config.dataPath) {
+    workspace.showMessage(`No nextword dataset found, you can set with nextword.dataPath or $NEXTWORD_DATA_PATH in env`, 'warning');
+    return;
+  }
+
   context.subscriptions.push(
     commands.registerCommand('nextword.Command', async () => {
       workspace.showMessage(`coc-nextword Commands works!`);
     }),
 
-    listManager.registerList(new DemoList(workspace.nvim)),
-
     sources.createSource({
-      name: 'coc-nextword completion source', // unique id
-      shortcut: '[CS]', // [CS] is custom source
+      name: 'nextword',
+      shortcut: 'NW', // TODO: now shows
       priority: 1,
-      triggerPatterns: [], // RegExp pattern
+      triggerOnly: true,
+      triggerPatterns: [/ /], // space only
       doComplete: async () => {
-        const items = await getCompletionItems();
-        return items;
+        return ctx.nextwords();
       }
     })
   );
-}
-
-async function getCompletionItems(): Promise<CompleteResult> {
-  return {
-    items: [
-      {
-        word: 'TestCompletionItem 1'
-      },
-      {
-        word: 'TestCompletionItem 2'
-      }
-    ]
-  };
 }
