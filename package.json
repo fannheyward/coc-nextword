@@ -1,6 +1,6 @@
 {
   "name": "coc-nextword",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "nextword extension for coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
@@ -10,6 +10,10 @@
   ],
   "engines": {
     "coc": "^0.0.70"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fannheyward/coc-nextword"
   },
   "scripts": {
     "clean": "rimraf lib",
