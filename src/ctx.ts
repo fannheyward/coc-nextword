@@ -1,5 +1,5 @@
 import { ChildProcess, spawn } from 'child_process';
-import { CompleteResult, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { CompleteResult, Document, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
 import { existsSync } from 'fs';
 import which from 'which';
 
@@ -10,8 +10,8 @@ class Config {
     this.cfg = workspace.getConfiguration('nextword');
   }
 
-  get enabled() {
-    return this.cfg.get('enabled', true);
+  get filetypes() {
+    return this.cfg.get('filetypes') as string[];
   }
 
   get dataPath() {
@@ -41,7 +41,17 @@ export class Ctx {
     return bin;
   }
 
+  private enabled(doc: Document): boolean {
+    if (this.config.filetypes.length === 0) return false;
+    if (this.config.filetypes.includes('*')) return true;
+
+    return this.config.filetypes.includes(doc.filetype);
+  }
+
   async nextwords(): Promise<CompleteResult | undefined> {
+    const doc = await workspace.document;
+    if (!this.enabled(doc)) return;
+
     if (!this.proc) {
       let args: string[] = ['-c', this.config.count];
       if (this.config.dataPath) {

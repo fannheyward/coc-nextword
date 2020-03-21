@@ -37,10 +37,13 @@
       "type": "object",
       "title": "coc-nextword configuration",
       "properties": {
-        "nextword.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable coc-nextword extension"
+        "nextword.filetypes": {
+          "type": "array",
+          "default": [
+            "markdown",
+            "gitcommit"
+          ],
+          "description": "Enable nextword for these filetypes, `[\"*\"]` for all, and empty to disable"
         },
         "nextword.dataPath": {
           "type": "string",
