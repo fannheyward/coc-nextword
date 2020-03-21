@@ -41,7 +41,9 @@ export class Ctx {
     return bin;
   }
 
-  private enabled(doc: Document): boolean {
+  async enabled(): Promise<boolean> {
+    const doc = await workspace.document;
+    if (!doc) return false;
     if (this.config.filetypes.length === 0) return false;
     if (this.config.filetypes.includes('*')) return true;
 
@@ -49,8 +51,7 @@ export class Ctx {
   }
 
   async nextwords(): Promise<CompleteResult | undefined> {
-    const doc = await workspace.document;
-    if (!this.enabled(doc)) return;
+    if (!this.enabled()) return;
 
     if (!this.proc) {
       let args: string[] = ['-c', this.config.count];

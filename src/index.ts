@@ -3,6 +3,9 @@ import { Ctx } from './ctx';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const ctx = new Ctx();
+  const enabled = await ctx.enabled();
+  if (!enabled) return;
+
   if (!ctx.bin) {
     workspace.showMessage(`nextword is not found, you need to install first: https://github.com/high-moctane/nextword`, 'warning');
     return;
