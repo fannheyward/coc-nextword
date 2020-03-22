@@ -80,12 +80,12 @@
         },
         "nextword.count": {
           "type": "number",
-          "default": 10000,
+          "default": 100,
           "description": "Max candidates word number"
         },
         "nextword.greedy": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Show as many result as possible"
         }
       }
