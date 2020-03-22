@@ -59,7 +59,7 @@
         },
         "coc.source.nextword.priority": {
           "type": "integer",
-          "default": 10
+          "default": 90
         },
         "coc.source.nextword.shortcut": {
           "type": "string",
@@ -80,8 +80,13 @@
         },
         "nextword.count": {
           "type": "number",
-          "default": 10,
+          "default": 10000,
           "description": "Max candidates word number"
+        },
+        "nextword.greedy": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show as many result as possible"
         }
       }
     },

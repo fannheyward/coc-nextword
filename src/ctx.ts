@@ -22,6 +22,10 @@ class Config {
   get count() {
     return this.cfg.get('count') as string;
   }
+
+  get greedy() {
+    return this.cfg.get('greedy') as boolean;
+  }
 }
 
 export class Ctx {
@@ -61,6 +65,7 @@ export class Ctx {
 
     if (!this.proc) {
       let args: string[] = ['-c', this.config.count];
+      if (this.config.greedy) args.push('-g');
       if (this.config.dataPath) {
         args = args.concat(['-d', this.config.dataPath]);
       }
