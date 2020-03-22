@@ -11,9 +11,10 @@
 
 ## Configurations
 
-- `nextword.filetypes`: Filetypes that enable nextword
-- `nextword.dataPath`: Custom path of nextword dataset
-- `nextword.count`: Max candidates word number
+- `nextword.filetypes`: filetypes that enable nextword, defaults `["markdown", "gitcommit"]`
+- `nextword.dataPath`: custom path of nextword dataset, will override `$NEXTWORD_DATA_PATH`
+- `nextword.count`: max candidates word number, defaults `100`
+- `nextword.greedy`: show as many results as possible, defaults `true`
 
 ## License
 
