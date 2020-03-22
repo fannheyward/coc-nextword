@@ -69,12 +69,14 @@ export class Ctx {
 
     if (!this.proc) return;
 
+    // According https://github.com/high-moctane/nextword/blob/master/nextword.go#L109
+    // nextword will use last four words to do suggest.
     const line = await workspace.nvim.line;
-    const parts = line.split(/[.,?!]/);
+    const parts = line.split(/[.?!]/);
     const last = parts[parts.length - 1];
     if (!last) return;
 
-    this.proc.stdin?.write(last + ' \n');
+    this.proc.stdin?.write(last + '\n');
 
     return new Promise<CompleteResult>(resolve => {
       const items: VimCompleteItem[] = [];

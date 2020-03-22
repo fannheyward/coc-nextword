@@ -23,8 +23,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     sources.createSource({
       name: 'nextword',
-      triggerOnly: true,
-      triggerPatterns: [/ /], // space only
+      triggerPatterns: [],
       doComplete: async () => {
         return ctx.nextwords();
       }
