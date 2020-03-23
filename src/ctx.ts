@@ -81,9 +81,9 @@ export class Ctx {
 
     this.proc.stdin?.write(last + '\n');
 
-    return new Promise<CompleteResult>(resolve => {
+    return new Promise<CompleteResult>((resolve) => {
       const items: VimCompleteItem[] = [];
-      this.proc?.stdout?.on('data', chunk => {
+      this.proc?.stdout?.on('data', (chunk) => {
         for (const word of (chunk.toString() as string).split(' ')) {
           items.push({ word: word.trimRight(), menu: this.menu });
         }

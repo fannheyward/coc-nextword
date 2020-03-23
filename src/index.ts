@@ -26,7 +26,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       triggerPatterns: [],
       doComplete: async () => {
         return ctx.nextwords();
-      }
+      },
     })
   );
 }
