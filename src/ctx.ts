@@ -61,8 +61,6 @@ export class Ctx {
   }
 
   async nextwords(): Promise<CompleteResult | undefined> {
-    if (!this.enabled()) return;
-
     if (!this.proc) {
       let args: string[] = ['-c', this.config.count];
       if (this.config.greedy) args.push('-g');
