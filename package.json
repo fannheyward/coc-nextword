@@ -87,6 +87,11 @@
           "type": "boolean",
           "default": true,
           "description": "Show as many result as possible"
+        },
+        "nextword.wasm": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use bundled nextword.wasm"
         }
       }
     },

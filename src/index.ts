@@ -2,7 +2,7 @@ import { commands, ExtensionContext, sources, workspace } from 'coc.nvim';
 import { Ctx } from './ctx';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  const ctx = new Ctx();
+  const ctx = new Ctx(context);
   const enabled = await ctx.enabled();
   if (!enabled) return;
 

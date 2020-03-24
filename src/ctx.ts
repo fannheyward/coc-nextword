@@ -1,6 +1,7 @@
 import { ChildProcess, spawn } from 'child_process';
-import { CompleteResult, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { CompleteResult, ExtensionContext, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
 import { existsSync } from 'fs';
+import path from 'path';
 import which from 'which';
 
 class Config {
@@ -26,6 +27,10 @@ class Config {
   get greedy() {
     return this.cfg.get('greedy') as boolean;
   }
+
+  get wasm() {
+    return this.cfg.get('wasm') as boolean;
+  }
 }
 
 export class Ctx {
@@ -33,7 +38,7 @@ export class Ctx {
   private proc: ChildProcess | null = null;
   private menu: string;
 
-  constructor() {
+  constructor(private readonly context: ExtensionContext) {
     this.config = new Config();
 
     const shortcut = workspace.getConfiguration('coc.source.nextword').get('shortcut') as string;
@@ -41,9 +46,10 @@ export class Ctx {
   }
 
   get bin(): string | undefined {
-    const bin = which.sync('nextword', { nothrow: true });
-    if (!bin) return;
+    if (this.config.wasm) return process.platform === 'win32' ? 'node.exe' : 'node';
 
+    const bin = process.platform === 'win32' ? 'nextword.exe' : 'nextword';
+    if (!which.sync('nextword', { nothrow: true })) return;
     if (!existsSync(bin)) return;
 
     return bin;
@@ -62,8 +68,13 @@ export class Ctx {
 
   async nextwords(): Promise<CompleteResult | undefined> {
     if (!this.proc) {
-      let args: string[] = ['-c', this.config.count];
+      let args: string[] = [];
+      if (this.config.wasm) {
+        args.push(path.join(this.context.extensionPath, 'bin', 'wasm_exec.js'));
+        args.push(path.join(this.context.extensionPath, 'bin', 'nextword.wasm'));
+      }
       if (this.config.greedy) args.push('-g');
+      args = args.concat(['-c', this.config.count]);
       if (this.config.dataPath) {
         args = args.concat(['-d', this.config.dataPath]);
       }
