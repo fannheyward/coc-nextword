@@ -48,8 +48,9 @@ export class Ctx {
   get bin(): string | undefined {
     if (this.config.wasm) return process.platform === 'win32' ? 'node.exe' : 'node';
 
-    const bin = process.platform === 'win32' ? 'nextword.exe' : 'nextword';
-    if (!which.sync('nextword', { nothrow: true })) return;
+    const cmd = process.platform === 'win32' ? 'nextword.exe' : 'nextword';
+    const bin = which.sync(cmd, { nothrow: true });
+    if (!bin) return;
     if (!existsSync(bin)) return;
 
     return bin;
