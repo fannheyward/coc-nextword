@@ -104,7 +104,7 @@ export class Ctx {
       });
 
       this.proc?.on('error', () => {
-        resolve();
+        resolve({ items });
       });
     });
   }
