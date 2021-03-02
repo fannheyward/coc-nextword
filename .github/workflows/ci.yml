@@ -32,6 +32,3 @@ jobs:
       - name: yarn build
         run: |
           yarn
-      - name: yarn lint
-        run: |
-          yarn lint
