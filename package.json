@@ -40,21 +40,15 @@
       "type": "object",
       "title": "coc-nextword configuration",
       "properties": {
-        "coc.source.nextword.enable": {
+        "nextword.enable": {
           "type": "boolean",
           "default": true
-        },
-        "coc.source.nextword.priority": {
-          "type": "integer",
-          "default": 90
-        },
-        "coc.source.nextword.shortcut": {
-          "type": "string",
-          "default": "Next"
         },
         "nextword.filetypes": {
           "type": "array",
           "default": [
+            "text",
+            "help",
             "markdown",
             "gitcommit"
           ],
@@ -67,7 +61,7 @@
         },
         "nextword.count": {
           "type": "number",
-          "default": 100,
+          "default": 10,
           "description": "Max candidates word number"
         },
         "nextword.greedy": {

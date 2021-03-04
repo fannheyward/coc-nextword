@@ -1,14 +1,18 @@
 import { ChildProcess, spawn } from 'child_process';
-import { CompleteResult, ExtensionContext, VimCompleteItem, workspace, WorkspaceConfiguration } from 'coc.nvim';
-import { existsSync } from 'fs';
+import { CompletionItem, CompletionItemProvider, ExtensionContext, workspace, WorkspaceConfiguration } from 'coc.nvim';
 import path from 'path';
 import which from 'which';
 
-class Config {
+export class Nextword implements CompletionItemProvider {
   private cfg: WorkspaceConfiguration;
+  private proc: ChildProcess | null = null;
 
-  constructor() {
+  constructor(private readonly context: ExtensionContext) {
     this.cfg = workspace.getConfiguration('nextword');
+  }
+
+  get enable() {
+    return this.cfg.get('enable') as boolean;
   }
 
   get filetypes() {
@@ -31,81 +35,48 @@ class Config {
   get wasm() {
     return this.cfg.get('wasm') as boolean;
   }
-}
 
-export class Ctx {
-  public readonly config: Config;
-  private proc: ChildProcess | null = null;
-  private menu: string;
-
-  constructor(private readonly context: ExtensionContext) {
-    this.config = new Config();
-
-    const shortcut = workspace.getConfiguration('coc.source.nextword').get('shortcut') as string;
-    this.menu = shortcut ? `[${shortcut}]` : '';
-  }
-
-  get bin(): string | undefined {
-    if (this.config.wasm) return process.platform === 'win32' ? 'node.exe' : 'node';
+  get bin(): string | null {
+    if (this.wasm) return process.platform === 'win32' ? 'node.exe' : 'node';
 
     const cmd = process.platform === 'win32' ? 'nextword.exe' : 'nextword';
-    const bin = which.sync(cmd, { nothrow: true });
-    if (!bin) return;
-    if (!existsSync(bin)) return;
-
-    return bin;
+    return which.sync(cmd, { nothrow: true });
   }
 
-  async enabled(): Promise<boolean> {
-    if (!workspace.getConfiguration('coc.source.nextword').get('enable') as boolean) return false;
-
-    const doc = await workspace.document;
-    if (!doc) return false;
-    if (this.config.filetypes.length === 0) return false;
-    if (this.config.filetypes.includes('*')) return true;
-
-    return this.config.filetypes.includes(doc.filetype);
-  }
-
-  async nextwords(): Promise<CompleteResult | undefined> {
+  async provideCompletionItems(): Promise<CompletionItem[]> {
     if (!this.proc) {
       let args: string[] = [];
-      if (this.config.wasm) {
+      if (this.wasm) {
         args.push(path.join(this.context.extensionPath, 'bin', 'wasm_exec.js'));
         args.push(path.join(this.context.extensionPath, 'bin', 'nextword.wasm'));
       }
-      if (this.config.greedy) args.push('-g');
-      args = args.concat(['-c', this.config.count]);
-      if (this.config.dataPath) {
-        args = args.concat(['-d', this.config.dataPath]);
-      }
+      if (this.greedy) args.push('-g');
+      args = args.concat(['-c', this.count]);
+      if (this.dataPath) args = args.concat(['-d', this.dataPath]);
       this.proc = spawn(this.bin!, args);
     }
 
-    if (!this.proc) return;
+    if (!this.proc) return [];
 
-    // According https://github.com/high-moctane/nextword/blob/master/nextword.go#L109
-    // nextword will use last four words to do suggest.
     const line = await workspace.nvim.line;
     const parts = line.split(/[.?!]/);
     const last = parts[parts.length - 1];
-    if (!last) return;
-
+    if (!last) return [];
     this.proc.stdin?.write(last + '\n');
 
-    return new Promise<CompleteResult>((resolve) => {
-      const items: VimCompleteItem[] = [];
+    return new Promise<CompletionItem[]>((resolve) => {
+      const items: CompletionItem[] = [];
       this.proc?.stdout?.on('data', (chunk) => {
         for (const word of (chunk.toString() as string).split(' ')) {
-          items.push({ word: word.trimRight(), menu: this.menu });
+          const label = word.trimRight();
+          if (!label) continue;
+          items.push({ label })
         }
 
-        resolve({ items });
+        resolve(items);
       });
 
-      this.proc?.on('error', () => {
-        resolve({ items });
-      });
+      this.proc?.on('error', () => resolve(items));
     });
   }
 }

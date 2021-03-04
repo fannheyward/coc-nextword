@@ -11,9 +11,9 @@
 
 ## Configurations
 
-- `nextword.filetypes`: filetypes that enable nextword, defaults `["markdown", "gitcommit"]`
+- `nextword.filetypes`: filetypes that enable nextword, defaults `["text", "help", "markdown", "gitcommit"]`
 - `nextword.dataPath`: custom path of nextword dataset, will override `$NEXTWORD_DATA_PATH`
-- `nextword.count`: max candidates word number, defaults `100`
+- `nextword.count`: max candidates word number, defaults `10`
 - `nextword.greedy`: show as many results as possible, defaults `true`
 - `nextword.wasm`: use bundled WebAssembly version `nextword`, this means you don't need to install `nextword` by Go, defaults `false`. In my tests, `nextword.go` takes 20-30ms to do suggesting, `nextword.wasm` takes 80-100ms.
 
