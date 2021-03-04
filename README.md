@@ -2,6 +2,8 @@
 
 [nextword][] extension for coc.nvim
 
+![](https://user-images.githubusercontent.com/345274/109935135-38bc3180-7d08-11eb-8d04-3e46b8df1fa4.mov)
+
 ## Install
 
 1. Install [nextword][]. **Note**: you can use bundled `nextword.wasm` instead, see `nextword.wasm`.
