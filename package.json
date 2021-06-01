@@ -23,7 +23,7 @@
     "@types/node": "^15.0.1",
     "@types/which": "^2.0.0",
     "coc.nvim": "^0.0.80",
-    "esbuild": "^0.11.2",
+    "esbuild": "^0.12.5",
     "typescript": "^4.0.2",
     "which": "^2.0.2"
   },
