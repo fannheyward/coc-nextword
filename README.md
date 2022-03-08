@@ -1,3 +1,5 @@
+**NEW PREDICTION ENGINE [MOCWORD](https://github.com/high-moctane/mocword) IS AVAILABLE, TRY [coc-mocword](https://github.com/fannheyward/coc-mocword)**.
+
 # coc-nextword
 
 [nextword][] extension for coc.nvim
